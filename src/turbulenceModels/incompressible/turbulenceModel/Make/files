@@ -1,0 +1,11 @@
+/* SOWFA-based models from Mat Churchfield */
+sowfabased = derivedFvPatchFields/SOWFAbased
+
+/* Surface Temperature flux Models */
+surfaceTemperatureFluxModels = $(sowfabased)/surfaceTemperatureFluxModels
+$(surfaceTemperatureFluxModels)/specifiedSurfaceTemperatureq2/specifiedSurfaceTemperatureq2FvPatchField.C
+
+/* Generalized Time-Varying Mapped Inflow/Outflow */
+$(sowfabased)/timeVaryingMappedInletOutlet/timeVaryingMappedInletOutletFvPatchFields.C
+
+LIB = $(FOAM_USER_LIBBIN)/libincompressibleTurbulenceModelABL

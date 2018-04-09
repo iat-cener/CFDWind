@@ -1,0 +1,9 @@
+#!/bin/bash
+cd ${0%/*} || exit 1    # run from this directory
+
+# build CFDWind libraries and applications
+wmake libso ./turbulenceModels/incompressible/turbulenceModel/
+wmake libso ./turbulenceModels/incompressible/RAS/
+
+
+

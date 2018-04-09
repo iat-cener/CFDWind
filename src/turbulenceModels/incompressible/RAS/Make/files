@@ -1,0 +1,23 @@
+/* Turbulence Models */
+kEpsilonSogachevPrecursor/kEpsilonSogachevPrecursor.C
+
+/* Wall functions */
+wallFunctions = derivedFvPatchFields/wallFunctions
+
+nutWallFunctions = $(wallFunctions)/nutWallFunctions
+$(nutWallFunctions)/nutAtmWallFunction/nutAtmWallFunctionFvPatchScalarField.C
+
+epsilonWallFunctions = $(wallFunctions)/epsilonWallFunctions
+$(epsilonWallFunctions)/epsilonAtmWallFunction/epsilonAtmWallFunctionFvPatchScalarField.C
+
+alphatWallFunctions = $(wallFunctions)/alphatWallFunctions
+$(alphatWallFunctions)/alphatAtmWallFunction/alphatAtmWallFunctionFvPatchScalarField.C
+$(alphatWallFunctions)/alphatAlletoWallFunction/alphatAlletoWallFunctionFvPatchScalarField.C
+
+/* heat transfer Wall functions */
+/* wallFunctionsHT = derivedFvPatchFields/wallFunctionsHeatTransfer */
+/* $(wallFunctionsHT)/nutThermalABLwallFunction/nutThermalABLwallFunctionFvPatchScalarField.C */
+/* $(wallFunctionsHT)/epsilonThermalABLwallFunction/epsilonThermalABLwallFunctionFvPatchScalarField.C */
+/* $(wallFunctionsHT)/alphatThermalABLwallFunction/alphatThermalABLwallFunctionFvPatchScalarField.C */
+
+LIB = $(FOAM_USER_LIBBIN)/libincompressibleSogachevRASModel
