@@ -1,0 +1,84 @@
+/*--------------------------------*- C++ -*----------------------------------*\
+| =========                 |                                                 |
+| \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox           |
+|  \\    /   O peration     | Version:  2.4.0                                 |
+|   \\  /    A nd           | Web:      www.OpenFOAM.org                      |
+|    \\/     M anipulation  |                                                 |
+\*---------------------------------------------------------------------------*/
+FoamFile
+{
+    version     2.0;
+    format      ascii;
+    class       dictionary;
+    object      setFieldsABLDict;
+}
+// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
+
+#include        "../inputParameters"
+
+
+// Extents of the domain.
+xMin                      $xMin;
+yMin                      $yMin;
+zMin                      $zMin;
+
+xMax                      $xMax;
+yMax                      $yMax;
+zMax                      $zMax;
+
+zRef                      $zMax;
+
+// Specify if distance from wall should be used as z.
+useWallDistZ              true;
+scaleVelocityWithHeight   false;
+
+
+// Specify how to initialze the base velocity and temperature profile.
+velocityInitType          "table";
+//velocityInitType          "log";
+//velocityInitType          "geostrophic";
+temperatureInitType       "table";
+//temperatureInitType       "simple";
+
+// Vertical profile table (required if above values are "table")
+profileTable
+(
+    #include    "../forcing/initialValues"
+);
+
+// Initial height of the center of the capping inversion.
+zInversion                $zInversion;
+zTKEInversion             $zTKEInversion;
+kAmb                      $kAmb;
+lmAmb                     $lmAmb;
+Cmu                       $Cmu;
+
+// Width of the capping inversion.
+widthInversion            $inversionWidth;
+
+// Potential temperature at the bottom and top of the capping inversion.
+Tbottom                   $TBottom;
+Ttop                      $TTop;
+
+// Height rate of change of potential temperature above the inversion.
+dTdz                      $TGradUpper;
+
+// Geostrophic wind speed magnitude.
+Ug                        $U0Mag;
+
+// Geostrophic wind speed direction.
+UgDir                     $flowDir;
+
+// Aerodynamic roughness height of surface.
+z0                        $z0;
+
+// von Karman constant.
+kappa                     $kappa;
+
+// Update internal field.
+updateInternalFields      true;
+
+// Update boundary field.
+updateBoundaryFields      false;
+
+// ************************************************************************* //

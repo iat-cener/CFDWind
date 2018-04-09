@@ -1,0 +1,132 @@
+/*---------------------------------------------------------------------------------------------|
+|                       CFDWIND  INPUT PARAMETERS                                    
+|    Author:      Roberto Chavez   (rchavez@cener.com)
+|    Last update: 02/2017
+|--------------------------------------------------------------------------------------------*/
+
+//runParams
+theEnd               100770;
+dt                   1.0;
+maxDeltaT            25.0;
+writeInt             600;
+maxCFL               0.75;
+
+nCores               16;                         // Number of cores on which to run this case.
+decompType           simple;                      // Decomposition algorithm.  "simple" and "scotch" are good choices.
+decompOrder          (2 2 4);                   // Order of the decomposition number of partitions in (x y z)-directions.
+
+
+//pimpleParams
+nCorrectors             2;     //default 1 (inner loops (pressure correction)
+nOuterCorrectors        1;     //default 1 (PISO mode) (outer loops, ie.pressure-momentum correction)
+turbOnFinalIterOnly     true;  //default true (compute turb only on last outer loop)
+momentumPredictor       true;  //default true  (true by Matt)  ("true" spits the U resid)  
+
+
+//ABLparams 
+strongLimitForEpsilon      yes;         // Sogachev et al. 2012?(limit epsilon based on lmax, default=no)
+limitTopAmbientValues      yes;         // default = yes
+minHeightForAmbientValues  0;           // 500m
+lmAmb                      0.5;         // default 0.05m
+kAmb                       1.0E-4;      // default 1.0E-4
+includeCoriolisForce  yes;              // Include Coriolis Force?(default=no)
+calculatefc           yes;               // Compute the coriolis factor as fc=2*omega*sin(lat)?(default=yes)
+fc                    -999;//1.39E-4;          // Coriolis factor (1/s). Used when calculatefc=no, ignored otherwise.
+Ug                    (8 0 0);          // Geostrophic wind (m/s).Mandatory when includeCoriolis | calculatelmax=yes
+latitude              51.971;             // Latitude(º). Used when calculatefc=yes, ignored otherwise.
+lMYreferencePoint     (0.1 0.1 0.0);    // Cell's ref. location for column integration for lMY mixing length calc.
+
+EarthPeriod          24.0;                        // Earth's rotation period (hr).
+windHeight           799;                       // Height at which to drive mean wind to U0Mag/dir (m).
+U0Mag                8.0;                         // Initial condition for wind speed (m/s).
+dir                  270.0;                       // Initial condition for wind direction (deg).
+
+
+
+// Initial conditions
+U0                    (8 0 0);          //Initial condition for wind speed (m/s).
+tke0                  1E-4;              // Helpful value might be u*^2/sqrt(Cmu) 
+tdr0                  1E-5; 
+p_rgh0                0.0;              // Ini.Press(minus the hydrostatic variation and normalized by rho) (m^2/s^2).
+alphat0               0.0;        
+T0                    300;            // Initial potential temperature at bottom of strong capping inversion (K).  
+
+//boundaryParams 
+z0                  0.15;             //roughness length
+flowDir             270.0;             // Flow direction at the inlet    (degrees)
+
+TGradUpper           0.003;           // Potential temperature gradient above the strong inversion (K/m).
+zInversion           750.0;           // Height of the middle of the initial strong capping inversion (m).
+inversionWidth       100.0;           // Vertical width of the intial strong capping inversion (m).
+zTKEInversion        200;             // Height of the initial tke layer (m).
+TBottom              300.0;          // Initial potential temperature at bottom of strong capping inversion (K).
+TTop                 305.0;          // Initial potential temperature at top of strong capping inversion (K).
+
+
+
+// Air Properties
+nu                    1.0E-05;          // Molecular viscosity (m^2/s).
+
+
+// Coefficient of turbulence model and surface conditions 
+kappa                 0.4;     //Set proposed by Katul
+Cmu                   0.03; 
+C1                    1.52; 
+C2                    1.833; 
+sigmaK                2.951311;
+sigmaEps              2.951311;
+
+Pr                    0.7;              // Molecular Prandtl number.
+Prts                  0.74;             // Turbulent "static" Prandtl number.
+TRef                  300;            // Reference potential temperature (K).
+ 
+  
+qwall       (0.0 0.0 0.0); //Temperature flux at wall (modify the z-value). A negative value is flux into domain (K-m/s).
+Rwall       (0.0 0.0 0.0 0.0 0.0 0.0);    // Initial wall shear stress (m^2/s^2).
+
+//betaM               15.0;                 // Monin-Obukhov wall shear stress model constant.
+//gammaM               4.9;                 // Monin-Obukhov wall shear stress model constant.
+//betaH                9.0;                 // Monin-Obukhov wall temperature flux model constant.
+//gammaH               7.8;            // Monin-Obukhov wall temperature flux model constant.
+//alphaH               1.0;            // Monin-Obukhov wall temperature flux model constant.
+
+betaM               16.0;                 // Monin-Obukhov wall shear stress model constant.
+gammaM               5.0;                 // Monin-Obukhov wall shear stress model constant.
+betaH               16.0;                 // Monin-Obukhov wall temperature flux model constant.
+gammaH               5.0;            // Monin-Obukhov wall temperature flux model constant.
+alphaH               1.0;            // Monin-Obukhov wall temperature flux model constant.
+
+heatingRate         -6.94E-05;       // Surface temperature change rate (when not directly setting temperature flux) (K/s).
+
+// Domain size and number of cells.
+Nx                   4;      // Number of cells in x-dir
+Ny                   4;      // Number of cells in y-dir
+Nz                   200;    // Number of cells in z-dir
+xMin                 0;      // Domain's length in -x
+xMax                 20.0;   // Domain's length in +x
+yMin                 0;      // Domain's length in -y
+yMax                 20.0;   // Domain's length in +y
+zMin                 0.0;    // Domain's ground
+zMax                 4000.0; // Domain's height
+zGrading             40;      // Size "ratio" between largest and smallest (first-cell) see blockMesh definition
+
+// Monitoring points
+monitoringPoint1 (15.1 15.1 3);
+monitoringPoint2 (15.1 15.1 150);
+
+// Postprocessing: extracting results in a line
+lineZstart   (15.1 15.1 0.0);
+lineZend     (15.1 15.1 3000);
+lineZfields (alphaB C1ast C3 k epsilon nut lm lMY p_rgh p Prt T Rig RiG gradTz wTz uStar L U);
+
+// Source driving setup
+momentumSourceType        "given";  //computed or given
+temperatureSourceType     "given";  //computed or given
+velocityInputType         "speedAndDirection";   //speedAndDirection or component
+
+// Planar averaging and source term statistics options.
+statisticsOn         true;                        // Gather planar-averaged flow statistics.
+statisticsFrequency  5;                           // Frequency in time steps of statistics gathering.
+
+#inputMode           merge
+

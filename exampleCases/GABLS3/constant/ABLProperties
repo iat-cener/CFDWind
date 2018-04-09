@@ -1,0 +1,58 @@
+/*--------------------------------*- C++ -*----------------------------------*\
+| =========                 |                                                 |
+| \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox           |
+|  \\    /   O peration     | Version:  2.4.0                                 |
+|   \\  /    A nd           | Web:      www.OpenFOAM.org                      |
+|    \\/     M anipulation  |                                                 |
+\*---------------------------------------------------------------------------*/
+FoamFile
+{
+    version     2.0;
+    format      ascii;
+    class       dictionary;
+    location    "constant";
+    object      ABLProperties;
+}
+// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
+
+#include "../inputParameters"
+
+strongLimitForEpsilon                       $strongLimitForEpsilon;  
+limitTopAmbientValues                       $limitTopAmbientValues;  	
+minHeightForAmbientValues                   $minHeightForAmbientValues;  
+lmAmb                lmAmb [0 1 0 0 0 0 0]  $lmAmb;
+kAmb                 kAmb  [0 2 -2 0 0 0 0] $kAmb;
+calculatefc                                 $calculatefc;  
+fc	                fc [0 0 -1 0 0 0 0] $fc;
+Ug	                Ug [0 1 -1 0 0 0 0] $Ug;
+latitude                                    $latitude;
+lMYreferencePoint                           $lMYreferencePoint;
+
+inletPatchName                              inlet; 
+groundPatchName                             ground; 
+z0                                          $z0;
+//  *********************** SOWFA-based IMPLEMENTATIONS **************************
+
+// Properties of the mesoscale source terms
+momentumSourceType       $momentumSourceType;
+temperatureSourceType    $temperatureSourceType;
+
+velocityInputType        $velocityInputType;
+
+
+// Use the source table in the file listed below.
+#include        "../forcing/forcingTable"
+
+// Relaxation factors applied when computing sources given desired
+// velocity and temperature.
+alphaMomentum      0.7;
+alphaTemperature   0.7;
+
+// Properties of the Coriolis force
+planetaryRotationPeriod   $EarthPeriod;
+//latitude                  $latitude;
+
+// Statistics gathering input
+statisticsOn              $statisticsOn;
+statisticsFrequency       $statisticsFrequency;
+// ************************************************************************* //

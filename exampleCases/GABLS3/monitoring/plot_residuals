@@ -1,0 +1,23 @@
+#set term postscript eps enhanced monochrome dashed lw 1.5 rounded size 20cm,15cm "Times-Roman" 14
+# Gnuplot script file for plotting data from file "log"
+
+set title "Convergence process" font "Times-Italic,12"
+set xlabel "Iterations"  
+set ylabel "Residuals" 
+set logscale y
+set grid
+
+plot "< cat log.modelRun  | grep 'for T' | cut -d' ' -f9 | tr -d ','" title 'T',  \
+     "< cat log.modelRun  | grep 'for epsilon' | cut -d' ' -f9 | tr -d ','" title 'epsilon',  \
+     "< cat log.modelRun  | grep 'for k' | cut -d' ' -f9 | tr -d ','" title 'k', \
+     "< cat log.modelRun  | grep 'for Ux' | cut -d' ' -f9 | tr -d ','" title 'Ux', \
+     "< cat log.modelRun  | grep 'for Uy' | cut -d' ' -f9 | tr -d ','" title 'Uy', \
+     "< cat log.modelRun  | grep 'for Uz' | cut -d' ' -f9 | tr -d ','" title 'Uz', \
+     "< cat log.modelRun  | grep 'for p_rgh' | cut -d' ' -f9 | tr -d ','" title 'p_rgh'
+
+pause 5   # pause mouse
+reread
+
+# Results
+#set output "residuals.eps"
+

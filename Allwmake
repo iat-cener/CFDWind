@@ -1,0 +1,24 @@
+#!/bin/bash
+#cd ${0%/*} || exit 1    # run from this directory
+
+# Do some logic to set things up for the proper version.
+echo "****************"
+echo "Building NEWAFoam"
+echo "****************"
+
+if [ ${WM_PROJECT_VERSION} == 2.4.0 ]
+then
+	# build CFDWind libraries and applications
+	echo "    -------------"
+	echo "    libraries"
+	echo "    -------------"
+	src/Allwmake $*
+	echo "    -------------"
+	echo "    solvers and utilities"
+	echo "    -------------"
+	applications/Allwmake $*
+else
+	echo "CFDWind is not yet built for openfoam versions different than 2.4"
+fi
+
+

@@ -1,0 +1,35 @@
+# Gnuplot script file for plotting data from probes files
+
+#set multiplot
+set title "Convergence process" font "Times-Italic,12"
+set xlabel "Iterations"  
+set ylabel "Point Diferences" 
+set logscale y
+set grid
+
+# DEFINING FUNCTIONS
+f(x,y)=sqrt(x**2 + y**2)
+
+uData= "< sed -e 's/(/ /g' -e 's/)/ /g' postProcessing/probes/0/U | awk ' NR >4 {print $1, $2-pr1x, $3-pr1y, $4-pr1z ; pr1x=$2; pr1y=$3; pr1z=$4}'"
+
+aData= "< sed -e 's/(/ /g' -e 's/)/ /g' postProcessing/probes/0/U | awk ' NR >4 {print $1, sqrt($5*$5+$6*$6)/sqrt($2*$2+$3*$3)}'"
+
+pData= "< awk ' NR >4 {print $1, $2-pr1 ; pr1=$2}' postProcessing/probes/0/p"
+tkeData= "< awk ' NR >4 {print $1, $2-pr1 ; pr1=$2}' postProcessing/probes/0/k"
+epsData= "< awk ' NR >4 {print $1, $2-pr1 ; pr1=$2}' postProcessing/probes/0/epsilon"
+TData= "< awk ' NR >4 {print $1, $2-pr1 ; pr1=$2}' postProcessing/probes/0/T"
+
+
+#FIRST PLOT  -> U,V
+#set size 1,0.35
+#set origin 0.0,0.5
+set logscale y
+plot  uData using   1:(f($2,$3)) every ::1 title '|u,v|', \
+      tkeData using 1:(sqrt($2*$2)) every ::1 title 'k', \
+      epsData using 1:(sqrt($2*$2)) every ::1 title 'eps', \
+      TData using   1:(sqrt($2*$2)) every ::1 title 'T'
+
+
+pause 25
+reread
+

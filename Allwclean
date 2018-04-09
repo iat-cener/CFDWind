@@ -1,0 +1,9 @@
+#!/bin/bash
+#cd ${0%/*} || exit 1    # run from this directory
+#currentPath=pwd
+
+# clean all NEWAFoam libraries and applications
+./applications/Allwclean
+
+./src/Allwclean
+

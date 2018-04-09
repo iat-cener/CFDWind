@@ -1,0 +1,7 @@
+matplotlib (1.5.1)
+netCDF4 (1.2.9)
+numexpr (2.6.3)
+numpy (1.14.0)
+pandas (0.22.0)
+pip (9.0.1)
+scipy (1.0.0)

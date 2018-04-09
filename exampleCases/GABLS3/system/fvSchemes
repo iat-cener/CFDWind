@@ -1,0 +1,90 @@
+/*--------------------------------*- C++ -*----------------------------------*\
+| =========                 |                                                 |
+| \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox           |
+|  \\    /   O peration     | Version:  2.4.0                                 |
+|   \\  /    A nd           | Web:      www.OpenFOAM.org                      |
+|    \\/     M anipulation  |                                                 |
+\*---------------------------------------------------------------------------*/
+FoamFile
+{
+    version     2.0;
+    format      ascii;
+    class       dictionary;
+    location    "system";
+    object      fvSchemes;
+}
+// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
+
+ddtSchemes
+{
+    default                        backward;
+    //default                       CrankNicolson 1.0;
+
+}
+
+gradSchemes
+{
+    default                        Gauss linear;
+    grad(U)                        Gauss linear;
+}
+
+divSchemes
+{
+//  defaultConfig in pimple
+/*
+    default          none;
+    div(phi,U)       Gauss upwind;
+    div(phi,T)       Gauss upwind;
+    div(phi,k)       Gauss upwind;
+    div(phi,epsilon) Gauss upwind;
+    div(phi,R)       Gauss upwind;
+    div(R)           Gauss linear;
+*/
+// M.Churchfield
+/*
+    default          Gauss linear;
+    div(phi,U)       Gauss linear;
+    div(phi,T)       Gauss linear;
+    div(phi,k)       Gauss linear;
+    div(phi,epsilon) Gauss linear;
+    div(phi,R)       Gauss linear;
+    div(R)           Gauss linear;
+*/
+
+// 
+    //default          Gauss linearUpwind grad(U);
+	 default          Gauss linear;
+    div(phi,U)       Gauss linearUpwind default;
+    div(phi,T)       Gauss linear       default;
+    div(phi,k)       Gauss linear       default;
+    div(phi,epsilon) Gauss linear;      default;
+    div(phi,R)       Gauss linear;      default;
+    div(R)           Gauss linear;      default;
+	 div(qwall)       Gauss linear;      default;
+
+    div((nuEff*dev(T(grad(U))))) Gauss linear;
+}
+
+laplacianSchemes
+{
+    default         Gauss linear uncorrected;
+}
+
+interpolationSchemes
+{
+    default         linear;
+}
+
+snGradSchemes
+{
+    default         uncorrected;
+}
+
+fluxRequired
+{
+    default         no;
+    p_rgh;
+}
+
+
+// ************************************************************************* //

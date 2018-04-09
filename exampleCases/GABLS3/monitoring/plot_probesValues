@@ -1,0 +1,52 @@
+# Gnuplot script file for plotting data from probes files
+
+set multiplot
+set grid
+set size 2,2
+set size ratio 1
+
+# DEFINING FUNCTIONS
+f(x,y)=sqrt(x**2 + y**2)
+
+uData= "< sed -e 's/(/ /g' -e 's/)/ /g' postProcessing/probes/0/U | awk ' NR >4 {print $1, $2, $3, $4 }'"
+
+alphaData= "< sed -e 's/(/ /g' -e 's/)/ /g' postProcessing/probes/0/U | awk ' NR >4 {print $1, sqrt($5*$5+$6*$6)/sqrt($2*$2+$3*$3) }'"
+
+pData= "< awk ' NR >4 {print $1, $2}' postProcessing/probes/0/p"
+tkeData= "< awk ' NR >4 {print $1, $2}' postProcessing/probes/0/k"
+epsData= "< awk ' NR >4 {print $1, $2}' postProcessing/probes/0/epsilon"
+TData= "< awk ' NR >4 {print $1, $2}' postProcessing/probes/0/T"
+
+#1 PLOT  -> U,V
+set size 0.5,0.5
+set origin 0.0,0.5
+#set logscale y
+plot  uData using ($1):(f($2,$3)) every ::1 title "|u,v|" 
+
+#2 PLOT  -> TKE
+set size 0.5,0.5
+set origin 0.46,0.5
+plot  tkeData using 1:2 title "k" 
+
+#5 PLOT  -> EPSILON
+set size 0.5,0.5
+set origin 0.0,0.0
+plot  epsData using 1:2 title "epsilon" 
+
+#6 PLOT  -> ALPHA
+#set size 0.5,0.5
+#set origin 0.46,0.0
+#unset logscale y
+#set yrange [1.15:1.2]
+#plot  alphaData using 1:2 title "alpha"
+
+#6 PLOT  -> TEMP
+set size 0.5,0.5
+set origin 0.46,0.0
+unset logscale y
+plot  TData using 1:2 title "T"
+
+unset multiplot
+
+pause 15
+#reread
