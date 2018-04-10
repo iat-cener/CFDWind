@@ -1,7 +1,7 @@
 # CFDWind3 
 
 ## Overview
-![CFDWindLogo](https://github.com/iat-cener/CFDWind/cfdwind3.png)
+![CFDWindLogo](https://windbench.net/system/files/cfdwind3.png)
 
 **CFDWind3** is a tool developed at CENER for the simulation of atmospheric flows whose latests implementations are carried out under the framework of the [New European Wind Atlas project (NEWA)](http://www.neweuropeanwindatlas.eu/).
 The current system is built under the open-source Computational Fluid Dynamics (CFD) tool-kit [OpenFOAM version 2.4.0](https://openfoam.org/download/2-4-0-ubuntu/).
