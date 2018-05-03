@@ -52,7 +52,7 @@ Even though the example case is preconfigured with the forcing files required to
 netCFD4 system libraries, as well as its Python bindings are available in most Linux-based OS repositories. In the specific case of Debian-type systems you can install them as follows:
 
 1. Install netCDF system libs:
-> `sudo apt install ibnetcdf-dev netcdf-bin`
+> `sudo apt install libnetcdf-dev netcdf-bin`
 2. Install (or make sure you have) systems libs:
 > `sudo apt install build-essential`
 3. Install (or make sure you have) pip library management system:
