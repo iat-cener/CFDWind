@@ -62,39 +62,6 @@ void alphatAlletoWallFunctionFvPatchScalarField::checkType()
 }
 
 
-/*
-scalar alphatAlletoWallFunctionFvPatchScalarField::yPlusTherm
-(
-    const scalar P,
-    const scalar Prat
-) const
-{
-    scalar ypt = 11.0;
-
-    for (int i=0; i<maxIters_; i++)
-    {
-        scalar f = ypt - (log(E_*ypt)/kappa_ + P)/Prat;
-        scalar df = 1.0 - 1.0/(ypt*kappa_*Prat);
-        scalar yptNew = ypt - f/df;
-
-        if (yptNew < VSMALL)
-        {
-            return 0;
-        }
-        else if (mag(yptNew - ypt) < tolerance_)
-        {
-            return yptNew;
-        }
-        else
-        {
-            ypt = yptNew;
-        }
-     }
-
-    return ypt;
-}
-*/
-
 // * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
 
 alphatAlletoWallFunctionFvPatchScalarField::
@@ -248,14 +215,6 @@ void alphatAlletoWallFunctionFvPatchScalarField::updateCoeffs()
     //const scalarField magGradUw(mag(Uw.snGrad()));
 	// The flow velocity at the adjacent cell centre
     const scalarField magUp(mag(Uw.patchInternalField() - Uw));  //rca
-	//const fvPatchScalarField& Tw = turbModel.T().boundaryField()[patchi];
-	//finish my shit
-
-    // Molecular Prandtl number
-    /*const scalar Pr
-    (
-        dimensionedScalar(transportProperties.lookup("Pr")).value()
-    );*/
 
 
     // Populate boundary values
@@ -272,37 +231,6 @@ void alphatAlletoWallFunctionFvPatchScalarField::updateCoeffs()
         //scalar uStarEq = Cmu25*sqrt(k[faceCellI]);  //rca
         alphatw[faceI] = uStarRH * y[faceI] * kappa_/( log(EdashT) * Prts_ );
 
-		//Info << "La puta uStarEq="<< uStarEq<<endl;
-		//Info << "La puta uStarRH="<< uStarRH<<endl;
-		//Info << "La puta alphatw["<<faceI<<"]"<< alphatw[faceI]<<endl;
-		//Info << "La puta magUp["<<faceI<<"]"<< magUp[faceI]<<endl;
-		//Info << "La puta magGradUw["<<faceI<<"]"<< magGradUw[faceI]<<endl;
-        Info << "La puta Prts"<< Prts_ <<endl;
-		
-		
-		/*   //original Crap
-        // y+
-        scalar yPlus = Cmu25*sqrt(k[faceCellI])*y[faceI]/nuw[faceI];
-
-        // Molecular-to-turbulent Prandtl number ratio
-        scalar Prat = Pr/Prt_;
-
-        // Thermal sublayer thickness
-        scalar P = Psmooth(Prat);
-        scalar yPlusTherm = this->yPlusTherm(P, Prat);
-
-        // Update turbulent thermal conductivity
-        if (yPlus > yPlusTherm)
-        {
-            scalar nu = nuw[faceI];
-            scalar kt = nu*(yPlus/(Prt_*(log(E_*yPlus)/kappa_ + P)) - 1/Pr);
-            alphatw[faceI] = max(0.0, kt);
-        }
-        else
-        {
-            alphatw[faceI] = 0.0;
-        }
-        */
     }
 
     fixedValueFvPatchField<scalar>::updateCoeffs();

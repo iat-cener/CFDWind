@@ -157,7 +157,7 @@ void specifiedSurfaceTemperatureq2FvPatchField::evaluate
     const Pstream::commsTypes
 )
 {
-	Info << "Im q2 " << endl;
+	//Info << "Im q2 " << endl;
     // ---Get preliminary information
     scalar t = db().time().timeOutputValue();
 

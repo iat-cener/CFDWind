@@ -101,8 +101,6 @@ tmp<scalarField> nutAtmWallFunctionFvPatchScalarField::calcNut() const
         */
         
 //        Info << ";  nutw[" <<faceI<<"]="<<nutw<< endl;
-        Info << "Cmu=" <<Cmu_<< endl;
-        Info << "kappa="<<kappa_<< endl;
     
     }
 
