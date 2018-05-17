@@ -11,9 +11,9 @@ maxDeltaT            25.0;
 writeInt             600;
 maxCFL               0.75;
 
-nCores               16;                         // Number of cores on which to run this case.
+nCores               4;                         // Number of cores on which to run this case.
 decompType           simple;                      // Decomposition algorithm.  "simple" and "scotch" are good choices.
-decompOrder          (2 2 4);                   // Order of the decomposition number of partitions in (x y z)-directions.
+decompOrder          (2 2 1);                   // Order of the decomposition number of partitions in (x y z)-directions.
 
 
 //pimpleParams
