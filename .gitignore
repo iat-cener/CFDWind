@@ -1,0 +1,4 @@
+
+*.bak
+
+exampleCases/GABLS3/pyFiles/lib/__pycache__/
