@@ -22,7 +22,7 @@ def read_nc_wrf(ncfile, ncDatesOffset, ncDatesSlope, vars2extract, datefrom, dat
 	fc = f.variables['fc'][:]    #Coriolis Factor
 	date_f = ncDatesOffset + ncDatesSlope * f.variables['time'][:]
 	idates = np.logical_and(date_f >= our_date2num(datefrom), date_f <= our_date2num(dateto))
-	print "ncfile dates coverage: " + str(our_num2date(date_f[0])) + " to " + str(our_num2date(date_f[-1]))
+	print(("ncfile dates coverage: " + str(our_num2date(date_f[0])) + " to " + str(our_num2date(date_f[-1]))))
 	
 	mesoData['t'] = date_f[idates]
 	mesoData['z'] = f.variables['z'][:]
@@ -30,7 +30,7 @@ def read_nc_wrf(ncfile, ncDatesOffset, ncDatesSlope, vars2extract, datefrom, dat
 	
 	for ii,vv in enumerate(vars2extract):
 		ncvar = vv[0]
-		if (f.variables.has_key(ncvar)):
+		if (ncvar in f.variables):
 			if (len(f.variables[ncvar].shape) == 1):
 				mesoData[ncvar] = f.variables[ncvar][:][idates]
 			elif (len(f.variables[ncvar].shape) == 2):
@@ -39,15 +39,15 @@ def read_nc_wrf(ncfile, ncDatesOffset, ncDatesSlope, vars2extract, datefrom, dat
 					plt.figure(ii); 
 					plot_nc_tzData(ncvar, mesoData['t'], mesoData['z'], mesoData[ncvar], datefrom, dateto)
 			else:
-				print "so far it is only prepared for 1d or 2d nc variables"
+				print ("so far it is only prepared for 1d or 2d nc variables")
 			
 			if vv[1]:
 				mesoData[ncvar] = mesoData[ncvar] * fc
 				
 		else:
-			print ncvar + " does not exist in the netcdf file"
+			print((ncvar + " does not exist in the netcdf file"))
 	
-	if ( mesoData.has_key('Ug') & mesoData.has_key('Vg') ):
+	if ( ('Ug' in mesoData) & ('Vg' in mesoData) ):
 		# Add Geostrophic wind velocity [m s-1] and direction [deg]
 		mesoData['Sg'] = (mesoData['Ug']**2 + mesoData['Vg']**2)**0.5
 		mesoData['Dg'] = 180 + np.arctan2(mesoData['Ug'],mesoData['Vg'])*180.0/np.pi

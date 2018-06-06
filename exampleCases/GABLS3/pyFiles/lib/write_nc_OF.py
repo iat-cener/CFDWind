@@ -14,7 +14,7 @@ def OF2nc_headers(fileout, inputs, siteData, timeData, zData):
 	n = len(timeData)
 	m = len(zData)
 	if not isfile(fileout):
-		print 'Creating netcdf file!!'
+		print('Creating netcdf file!!')
 		f = netCDF4.Dataset(fileout,'w',format= "NETCDF4")
 		# create dimensions, variables and attributes:
 		#f.history = inputs[0]['siteID'] + ': Meso forcing = ' + filemeso + ','.join('{}{}'.format(key, val) for key, val in model[0].items())	
@@ -50,12 +50,12 @@ def OF2nc_headers(fileout, inputs, siteData, timeData, zData):
 		f.close()	
 	
 	else:
-		print "File already exist"
+		print("File already exist")
 		
 		
 def OF2nc_data(fileout, nDimensions, varName, varLongName, varUnits, varData):
 
-	print "appending variable "+ varName 
+	print("appending variable "+ varName) 
 	f = netCDF4.Dataset(fileout,'a',format= "NETCDF4")
 	
 	if (nDimensions==1):
@@ -63,7 +63,7 @@ def OF2nc_data(fileout, nDimensions, varName, varLongName, varUnits, varData):
 	elif (nDimensions==2):
 		var = f.createVariable(varName, 'float', ('time','z',))
 	else:
-		print "only 1(time) or 2 (time,z) dimensions allowed so far"
+		print("only 1(time) or 2 (time,z) dimensions allowed so far")
 		
 	var.long_name = varLongName
 	var.units = varUnits
@@ -71,6 +71,6 @@ def OF2nc_data(fileout, nDimensions, varName, varLongName, varUnits, varData):
 		
 	f.close()
 
-	print 'Saving ' + fileout
+	print('Saving ' + fileout)
 	sys.stdout.flush()
 		
