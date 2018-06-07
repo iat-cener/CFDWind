@@ -1,14 +1,14 @@
     // Solve the momentum equation
 
-    #include "computeCoriolisForce.H"    //mChurch
+    #include "computeCoriolisForce.H"    //SOWFA implementation
 
     fvVectorMatrix UEqn
     (
-        fvm::ddt(U)                     //time derivative
-      + fvm::div(phi, U)                //convection
-      + turbulence->divDevReff(U)       //Divergence of shear-rate tensor (div(Tau))
-      - fCoriolis                      //Coriolis force  MChurch
-      - SourceU                          // mesoscale source terms
+        fvm::ddt(U)                 //time derivative
+      + fvm::div(phi, U)            //convection
+      + turbulence->divDevReff(U)   //Divergence of shear-rate tensor (div(Tau))
+      - fCoriolis                   //Coriolis force 
+      - SourceU                   //Driving force (either ideal or from mesoscale)
      ==
         fvOptions(U)
     );

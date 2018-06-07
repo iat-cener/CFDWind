@@ -28,11 +28,10 @@ boundaryField
     ground
     {
 
-        type            fixedValue;   //Mat stuff sowfa
+        type            fixedValue;   //Sowfa inherited
         value           uniform 0.0;
-
 /*
-        type            alphatAtmWallFunction;
+        type            alphatAtmWallFunction;   //alternative approach
         #include "include/SBLparameters"
         value           uniform 0.2;
 */
@@ -40,14 +39,10 @@ boundaryField
 
     top
     {
-/*        
-        type            calculated;
-        value           uniform 0;
-*/
         type            slip;
 
 /*
-        type            fixedValue;   //Mat stuff sowfa
+        type            fixedValue;   //Sowfa
         value           uniform 0.0;
 */
     }

@@ -31,9 +31,9 @@ boundaryField
     {
 //        type            zeroGradient;
 
-		type            nutAtmWallFunction;
-      #include "include/SBLparameters"
-		value           uniform 2.0;
+        type            nutAtmWallFunction;
+        #include "include/SBLparameters"
+        value           uniform 2.0;
     }
 
     top
