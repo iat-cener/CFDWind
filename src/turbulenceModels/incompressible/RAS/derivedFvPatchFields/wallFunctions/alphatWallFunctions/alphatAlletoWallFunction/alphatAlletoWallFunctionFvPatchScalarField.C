@@ -210,11 +210,11 @@ void alphatAlletoWallFunctionFvPatchScalarField::updateCoeffs()
     const IOdictionary& transportProperties =
         db().lookupObject<IOdictionary>("transportProperties");
 
-	//my shit
+	//new stuff
 	const fvPatchVectorField& Uw = turbModel.U().boundaryField()[patchi];
     //const scalarField magGradUw(mag(Uw.snGrad()));
 	// The flow velocity at the adjacent cell centre
-    const scalarField magUp(mag(Uw.patchInternalField() - Uw));  //rca
+    const scalarField magUp(mag(Uw.patchInternalField() - Uw));  //rchavez
 
 
     // Populate boundary values
@@ -226,9 +226,9 @@ void alphatAlletoWallFunctionFvPatchScalarField::updateCoeffs()
         //scalar z0value = 0.1;
         scalar z0value = max(z0min,z0_[faceI]);
 
-        scalar EdashT = 1.0 + max( y[faceI]/z0value , 1e-5); //rca
-        scalar uStarRH = magUp[faceI]*kappa_ / log(EdashT);  //rca
-        //scalar uStarEq = Cmu25*sqrt(k[faceCellI]);  //rca
+        scalar EdashT = 1.0 + max( y[faceI]/z0value , 1e-5); //rchavez
+        scalar uStarRH = magUp[faceI]*kappa_ / log(EdashT);  //rchavez
+        //scalar uStarEq = Cmu25*sqrt(k[faceCellI]);  
         alphatw[faceI] = uStarRH * y[faceI] * kappa_/( log(EdashT) * Prts_ );
 
     }

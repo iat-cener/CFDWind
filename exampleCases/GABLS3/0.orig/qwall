@@ -1,7 +1,7 @@
 /*--------------------------------*- C++ -*----------------------------------*\
 | =========                 |                                                 |
 | \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox           |
-|  \\    /   O peration     | Version:  1.6                                   |
+|  \\    /   O peration     | Version:  2.4.0                                 |
 |   \\  /    A nd           | Web:      www.OpenFOAM.org                      |
 |    \\/     M anipulation  |                                                 |
 \*---------------------------------------------------------------------------*/
@@ -24,7 +24,7 @@ internalField   uniform (0.0 0.0 0.0);
 boundaryField
 {
 
-    #include "include/sidePatches"
+	#include "include/sidePatches"
 
 	ground
 	{
@@ -39,18 +39,16 @@ boundaryField
 		averageType     "planarAverage";
 		value           uniform $qwall;
 		TSurface        csvFile;
-      TSurfaceCoeffs
-      {
-         fileName           "forcing/surfaceSkinPotentialTemperatureTable";		  
-         nHeaderLine         0;
-         refColumn           0;
-         componentColumns    (1);
-         mergeSeparators     yes;
-         outOfBounds         clamp;
+		TSurfaceCoeffs
+		{
+			fileName           "forcing/surfaceSkinPotentialTemperatureTable";		  
+			nHeaderLine         0;
+			refColumn           0;
+			componentColumns    (1);
+			mergeSeparators     yes;
+			outOfBounds         clamp;
 		}
-
-
-    }
+	}
 
     top
     {

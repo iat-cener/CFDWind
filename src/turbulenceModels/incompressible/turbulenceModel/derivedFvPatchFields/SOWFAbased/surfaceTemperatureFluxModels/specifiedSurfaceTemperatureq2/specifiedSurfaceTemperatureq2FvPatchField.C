@@ -252,7 +252,6 @@ void specifiedSurfaceTemperatureq2FvPatchField::evaluate
         // Transform the velocity from Cartesian to local
         UParallelP[facei] = transformVectorCartToLocal(UParallel[facei], xP, yP, zP);
 
-        //pito
         //Info << "facei = " << facei << nl
         //Info   << "UParallelO = " << UParallel[facei] << endl
              //<< "UParallelP = " << UParallelP << tab;
@@ -574,14 +573,13 @@ void  specifiedSurfaceTemperatureq2FvPatchField::qwEvaluate
             // Set iterator to zero
             label iter = 0;
 
-            //my crap (rchavez)
+            //use a tolerance to define the range of neutral atmosphere
             scalar neutralTol = 0.0001;
 
           //Info << "U = " << U << endl;
 
             // Set initial guesse at u*
-            //scalar uStar0 = (kappa * U) / Foam::log(z1 / z0);   //Matt
-            scalar uStar0 = (kappa * U) / Foam::log( (z1+z0) / z0 );  //rchavez
+            scalar uStar0 = (kappa * U) / Foam::log( (z1+z0) / z0 ); 
 
           //Info << "uStar0 = " << uStar0 << endl;
 
@@ -592,8 +590,7 @@ void  specifiedSurfaceTemperatureq2FvPatchField::qwEvaluate
             scalar z0H = z0/100.0;
 
             // Set initial guess at qw
-            //scalar qw0 = (-deltaT * uStar0 * kappa) / (alphaH * Foam::log(z1 / z0));  //Matt
-            scalar qw0 = (-deltaT * uStar0 * kappa) / (alphaH * Foam::log( (z1+z0) / z0H));  //rchavez
+            scalar qw0 = (-deltaT * uStar0 * kappa) / (alphaH * Foam::log( (z1+z0) / z0H)); 
 
             //Info << "qw0 = " << qw0 << tab <<
             //      "uStar0 = " << uStar0 << endl;
@@ -625,7 +622,7 @@ void  specifiedSurfaceTemperatureq2FvPatchField::qwEvaluate
             // --stable
             // see book "Modelling of Atmospheric Flow Field", editors D. Lalas and C. Ratto
             // chapter 2--Modelling the Vertical ABL Structure, D. Etling, pp. 56--57
-            //else if (deltaT > 100000000.0) //mat original
+            //else if (deltaT > 100000000.0) //SOWFA original
             else if (deltaT > neutralTol)
             {
                 //Info << "Stable qw" << endl;
@@ -673,8 +670,7 @@ void  specifiedSurfaceTemperatureq2FvPatchField::qwEvaluate
 
                     // update u*
                     scalar uStarOld = uStar0;
-                    //uStar0 = (kappa * U) / (Foam::log(z1/z0) - psiM0);
-                    uStar0 = (kappa * U) / (Foam::log((z1+z0)/z0) - psiM0);   //rchavez
+                    uStar0 = (kappa * U) / (Foam::log((z1+z0)/z0) - psiM0);
 
                     // update qw
                     scalar qwOld = qw0;
@@ -706,7 +702,7 @@ void  specifiedSurfaceTemperatureq2FvPatchField::qwEvaluate
             // article "The Mathematical Representation of Wind Speed and Temperature Profiles
             // in the Unstable Atmospheric Surface Layer", C. Paulson, Journal of Applied
             // Meteorology, Vol 9, 1970, pp. 857--861.
-            //else if (deltaT < -100000000.0)  //mat original
+            //else if (deltaT < -100000000.0)  //SOWFA original
             else
             {
                 //Info << "Unstable qw" << endl;
@@ -752,13 +748,11 @@ void  specifiedSurfaceTemperatureq2FvPatchField::qwEvaluate
 
                     // update u*
                     scalar uStarOld = uStar0;
-                    //uStar0 = (kappa * U) / (Foam::log(z1/z0) - psiM0);
                     uStar0 = (kappa * U) / (Foam::log((z1+z0)/z0) - psiM0);   //rchavez
                     //Info << "uStar0 = " << uStar0 << endl;
 
                     // update qw
                     scalar qwOld = qw0;
-                    //qw0 = -(kappa * uStar0 * deltaT) / (alphaH * Foam::log(z1/z0) - psiH0);
                     qw0 = -(kappa * uStar0 * deltaT) / (alphaH * Foam::log((z1+z0)/z0H) - psiH0);  //rchavez
                     //Info << "qw0 = " << qw0 << endl;
 

@@ -1,17 +1,18 @@
 {
-    //alphat = turbulence->nut()/Prt;
-	//alphat = turbulence->nut()/turbulence->Prt();        //myyy shit
-    //alphat.correctBoundaryConditions();    //commented by MChurch
+	// Now the turbulence update is included in turbulenceCorrect.H 
+	//alphat = turbulence->nut()/turbulence->Prt();  
+    //alphat.correctBoundaryConditions();            
+
     
     volScalarField alphaEff("alphaEff", turbulence->nu()/Pr + alphat);
 
     fvScalarMatrix TEqn
     (
-        fvm::ddt(T)
-      + fvm::div(phi, T)
-      - fvm::laplacian(alphaEff, T)
-      - fvc::div(qwall)
-      - SourceT                                //M. Church.
+        fvm::ddt(T)                  // time derivative
+      + fvm::div(phi, T)             // convection
+      - fvm::laplacian(alphaEff, T)  // diffusion (molecular + turbulent)
+      - fvc::div(qwall)              // temperature flux at boundary
+      - SourceT                      // forcing (either ideal of from meso)
      ==
         fvOptions(T)
     );
