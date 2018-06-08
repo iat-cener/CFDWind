@@ -36,7 +36,7 @@ def main():
 				
 		
 	# read common data from the first variable defined		
-	U, t, coords = readSetFile(OFpath,UFileName,'U',True)
+	U, t, coords = readSetFile(openFoamCasePath,UFileName,'U',True)
 	zData = coords['z'].as_matrix()
 	timeData = np.float64(t)/(3600*24.0) + mdates.date2num(datefrom)	
 	
