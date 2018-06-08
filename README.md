@@ -91,7 +91,7 @@ If you want to change the directory then edit the new path in the `./runPreproce
 3. Edit the number of processors to use 
 4. Run the `./runPreprocessing.sh` script to set up the mesh and initial fields.
 5. Run the `./runCase.sh` script
-6. Run the `./runPosprocessing.sh` script to extract the results. 
+6. Run the `./runPostprocessing.sh` script to extract the results. 
 
 
 ## License

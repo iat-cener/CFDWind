@@ -19,7 +19,9 @@ def read_nc_wrf(ncfile, ncDatesOffset, ncDatesSlope, vars2extract, datefrom, dat
 
 	mesoData = {}
 	f = netCDF4.Dataset(ncfile, 'r')
-	fc = f.variables['fc'][:]    #Coriolis Factor
+	mesoData['fc'] = f.variables['fc'][:]    #Coriolis Factor
+	mesoData['lat'] = f.variables['lat'][:]  #latitude of the site
+	mesoData['lon'] = f.variables['lon'][:]   #longitude of the site
 	date_f = ncDatesOffset + ncDatesSlope * f.variables['time'][:]
 	idates = np.logical_and(date_f >= our_date2num(datefrom), date_f <= our_date2num(dateto))
 	print(("ncfile dates coverage: " + str(our_num2date(date_f[0])) + " to " + str(our_num2date(date_f[-1]))))
@@ -42,7 +44,7 @@ def read_nc_wrf(ncfile, ncDatesOffset, ncDatesSlope, vars2extract, datefrom, dat
 				print ("so far it is only prepared for 1d or 2d nc variables")
 			
 			if vv[1]:
-				mesoData[ncvar] = mesoData[ncvar] * fc
+				mesoData[ncvar] = mesoData[ncvar] * mesoData['fc']
 				
 		else:
 			print((ncvar + " does not exist in the netcdf file"))

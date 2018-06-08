@@ -10,7 +10,7 @@ import sys
 import netCDF4 
 from os.path import isfile
 
-def OF2nc_headers(fileout, inputs, siteData, timeData, zData):
+def OF2nc_headers(fileout, inputs, timeData, zData):
 	n = len(timeData)
 	m = len(zData)
 	if not isfile(fileout):
@@ -25,17 +25,17 @@ def OF2nc_headers(fileout, inputs, siteData, timeData, zData):
 		lats = f.createVariable('lat', 'float', ('site',))
 		lats.long_name = 'Site latitude'
 		lats.units = 'degrees North'
-		lats[:] = inputs[0]['lat']
+		lats[:] = inputs['lat']
 		    
 		lons = f.createVariable('lon', 'float', ('site',))
 		lons.long_name = 'Site longitude'
 		lons.units = 'degrees East'
-		lons[:] = inputs[0]['lat']
+		lons[:] = inputs['lon']
 				
 		fcs = f.createVariable('fc', 'float', ('site',))
 		fcs.long_name = 'Coriolis parameter'
 		fcs.units = 's-1'
-		fcs[:] = siteData['fc']
+		fcs[:] = inputs['fc']
 		   
 		times = f.createVariable('time', 'float', ('time',))
 		times.long_name = 'Time'

@@ -67,13 +67,8 @@ def main():
 	kappa   =R_air/Cp_air    # Poisson constant (R/Cp)
 			
 	#%%     CODE###############################################
-	 
-	# Save inputs set up in the openfoam case folder
-	outFilePy = {'datefrom':datefrom, 'dateto':dateto}
-	with open(openFoamCasePath+'/initialization_inputs.pckl', 'wb') as f:
-		pickle.dump(outFilePy, f, protocol=-1)
-	
-	# Extract data from mesoscale. The structure is [name in nc file, multiply by fc?]
+
+	# Extract data from mesoscale. The structure is [name in nc file, should they by multiplied by fc?]
 	vars2extract =[ ['U',    False],
 				['V',    False],
 				['W',    False],
@@ -89,7 +84,7 @@ def main():
 	
 	mesoData = read_nc_wrf(mesoDataSetup['ncfile'], mesoDataSetup['datesOffset'], mesoDataSetup['datesSlope'],
 													vars2extract, datefrom, dateto, plotData)
-	
+
 	#  define if the values are provided by WRF outputs
 	z    = mesoData['z']
 	t    = mesoData['hrs_since_t0'] * 3600
@@ -97,10 +92,14 @@ def main():
 	V    = mesoData['V']
 	Th   = mesoData['Th']
 
-	# set-up forcing	
-	Uf = mesoData['Uadv'] - mesoData['Vg']    # mometum forcing east-west component
+	# set-up forcing: Momentum and energy budget from WRF used as driving force of the micro
+	# Note that, the Gestrophic wind refers to the Pressure gradient componet 
+	# which by convention is derived as dP/dx=-Vg  & dP/dy=Ug
+
+	Uf = mesoData['Uadv'] - mesoData['Vg']    # mometum forcing east-west component.  
 	Vf = mesoData['Vadv'] + mesoData['Ug']    # mometum forcing north-south component
 	Wf = np.zeros(np.shape(Uf))               # mometum forcing vertical component
+
 	Thf= mesoData['Thadv']                    # heat flux tendency
 	
 
@@ -184,6 +183,12 @@ def main():
 	with open(openFoamCasePath+'/forcing.pckl', 'wb') as f:
 		pickle.dump(mesoData, f, protocol=-1)
 			
+	# Save inputs of the case initialization for further usage in the postprocessing stage
+	inputs = {'lat':mesoData['lat'][0], 'lon': mesoData['lon'][0], 'fc':mesoData['fc'][0]}
+	outFilePy = {'datefrom':datefrom, 'dateto':dateto, 'inputs': inputs}
+	with open(openFoamCasePath+'/initialization_inputs.pckl', 'wb') as f:
+		pickle.dump(outFilePy, f, protocol=-1)
+
 
 	return 0
 #%%
