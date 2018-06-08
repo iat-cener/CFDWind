@@ -17,15 +17,15 @@ def main():
 	#%%
 #  INPUTS
 	caseName = os.environ.get("OFCASE","OF case does not exist")
-	OFpath = os.environ.get("OFPATH","Path do not exist")
+	openFoamCasePath = os.environ.get("OFPATH","Path do not exist")
 		
-	outputFile=OFpath+'/'+caseName
+	outputFile=openFoamCasePath+'/'+caseName
 	
 	# so far the names of the set files are hardcoded to the followin:g	
 	scalarsFileName='lineZ_alphaB_C1ast_C3_k_epsilon_nut_lm_lMY_p_rgh_p_Prt_T_Rig_RiG_gradTz_wTz_uStar_L.xy'
 	UFileName='lineZ_U.xy'
 
-	init_Inputs=pd.read_pickle(OFpath+'/initialization_inputs.pckl')
+	init_Inputs=pd.read_pickle(openFoamCasePath+'/initialization_inputs.pckl')
 	
 	inputs = init_Inputs['inputs']
 	datefrom = init_Inputs['datefrom']
@@ -33,15 +33,19 @@ def main():
 	# SAVE AS PICKL FORMAT
 	varList = ['alphaB','C1ast','C3','k','epsilon','nut','lm','lMY',
 				'p_rgh','p','Prt','T','RiG','gradTz','wTz','uStar','L']		
+				
 		
+	# read common data from the first variable defined		
 	U, t, coords = readSetFile(OFpath,UFileName,'U',True)
+	zData = coords['z'].as_matrix()
+	timeData = np.float64(t)/(3600*24.0) + mdates.date2num(datefrom)	
 	
-	fdataPy = dict(t=np.float64(t)/(3600*24.0) + mdates.date2num(datefrom), 
-							z=coords['z'], ux=U['ux'], uy=U['uy'], uz=U['uz'])
+	fdataPy = dict(t=timeData,z=coords['z'], ux=U['ux'], uy=U['uy'], uz=U['uz'])
 		
 	fdataPy['S'] = np.sqrt(U['ux']**2 + U['uy']**2 + U['uz']**2) 
 	fdataPy['D'] = 180.0 + np.arctan2(U['ux'],U['uy'])*180.0/np.pi
 																
+	# read data for the rest of variables
 	for ii in varList:
 		if (ii is not 'U'):
 			varData = readSetFile(OFpath,scalarsFileName,ii)
@@ -64,11 +68,6 @@ def main():
 			['L',    'L',    'Obukhov length'  ,         'm',      0, 0]
 			]
 		
-	# read common data from the first variable defined
-	U, t, coords = readSetFile(OFpath,UFileName,'U',True)
-	zData = coords['z'].as_matrix()
-	timeData = t/(3600*24.0) + mdates.date2num(datefrom)
-		
 	OF2nc_headers(outputFile+'.nc', inputs, timeData, zData)
 		
 	OF2nc_data(outputFile+'.nc',2 ,'U','U velocity component','m s-1', U['ux'].as_matrix().T)
@@ -82,7 +81,7 @@ def main():
 		varUnits    = vars2extract[ii][3]
 		print("proccesing variable: "+ varName)
 	
-		varData = readSetFile(OFpath,scalarsFileName,varNameInSetsFile)
+		varData = readSetFile(openFoamCasePath,scalarsFileName,varNameInSetsFile)
 		if (vars2extract[ii][4]==0):
 			OF2nc_data(outputFile+'.nc',2 ,varName,varLongName,varUnits, varData['data'].as_matrix().T)
 		else:
