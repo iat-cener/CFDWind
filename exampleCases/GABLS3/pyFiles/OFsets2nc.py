@@ -30,9 +30,6 @@ def main():
 	inputs = init_Inputs['inputs']
 	datefrom = init_Inputs['datefrom']
 
-	omega   = 7.2921159e-5    # angular speed of the Earth [rad/s]
-	fc  = 2*omega*np.sin(inputs[0]['lat']*np.pi/180)     # Coriolis parameter [s-1]
-	
 	# SAVE AS PICKL FORMAT
 	varList = ['alphaB','C1ast','C3','k','epsilon','nut','lm','lMY',
 				'p_rgh','p','Prt','T','RiG','gradTz','wTz','uStar','L']		
@@ -69,11 +66,10 @@ def main():
 		
 	# read common data from the first variable defined
 	U, t, coords = readSetFile(OFpath,UFileName,'U',True)
-	siteData = {'fc': fc}
 	zData = coords['z'].as_matrix()
 	timeData = t/(3600*24.0) + mdates.date2num(datefrom)
 		
-	OF2nc_headers(outputFile+'.nc', inputs, siteData, timeData, zData)
+	OF2nc_headers(outputFile+'.nc', inputs, timeData, zData)
 		
 	OF2nc_data(outputFile+'.nc',2 ,'U','U velocity component','m s-1', U['ux'].as_matrix().T)
 	OF2nc_data(outputFile+'.nc',2 ,'V','V velocity component','m s-1', U['uy'].as_matrix().T)
