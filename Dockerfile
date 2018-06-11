@@ -53,7 +53,8 @@ COPY Allwclean Allwmake CFDWind/
 
 
 # Only used for GABLS3 example case
-ADD http://hdl.handle.net/11304/59d8d6d7-8300-4aff-aeb4-9812b6153ee9 ./CFDWind/exampleCases/GABLS3/inputData/GABLS3_tendencies_d02_YSU_w60_L9000.nc
+RUN mkdir -p ./CFDWind/exampleCases/GABLS3/inputData  &&\
+	wget -q "http://hdl.handle.net/11304/59d8d6d7-8300-4aff-aeb4-9812b6153ee9" -O ./CFDWind/exampleCases/GABLS3/inputData/GABLS3_tendencies_d02_YSU_w60_L9000.nc
 
 RUN chown -R jovyan ./CFDWind 
 
