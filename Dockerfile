@@ -29,11 +29,10 @@ RUN wget -q "http://downloads.sourceforge.net/foam/OpenFOAM-2.4.0.tgz?use_mirror
 		source $HOME/OpenFOAM/OpenFOAM-2.4.0/etc/bashrc WM_NCOMPPROCS=4 &&\ 
 	    export QT_SELECT=qt4 &&\
 	    ./Allwmake > log.make 2>&1 &&\
-		./Allwmake"
-RUN	rm OpenFOAM-2.4.0.tgz && \
+		./Allwmake" &&\
+	rm OpenFOAM-2.4.0.tgz && \
 	rm ThirdParty-2.4.0.tgz &&\
 	rm -R ./OpenFOAM-2.4.0/doc &&\
-	rm -R ./OpenFOAM-2.4.0/src &&\
 	rm -R ./OpenFOAM-2.4.0/tutorials &&\
 	rm -R ./ThirdParty-2.4.0/cmake-2.8.12.1 &&\
 	rm -R ./ThirdParty-2.4.0/ParaView-4.1.0 &&\
@@ -67,11 +66,9 @@ RUN mkdir -p ./CFDWind/platforms/linux64GccDPOpt/bin  &&\
 WORKDIR CFDWind
 
 RUN /bin/bash -c "source $HOME/OpenFOAM/OpenFOAM-2.4.0/etc/bashrc WM_NCOMPPROCS=4 &&\ 
-    export QT_SELECT=qt4 &&\
-	./Allwclean &&\
-    ./Allwmake  &&\
-	./Allwmake" #Run it a second time for getting a summary of the installation
-
-
+    	export QT_SELECT=qt4 &&\
+		./Allwclean &&\
+		./Allwmake" &&\
+	rm -R $HOME/OpenFOAM/OpenFOAM-2.4.0/src
 
 
