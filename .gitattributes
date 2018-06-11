@@ -1,5 +1,5 @@
-# Auto detect text files and perform LF normalization
+# Use UNIX line ending by default
 * text eol=lf
 
-
-
+# IUse WINDOWS line ending for:
+*.bat text eol=crlf
