@@ -1,4 +1,4 @@
-	FROM unidata/python
+FROM unidata/python
 
 
 USER root
@@ -48,6 +48,7 @@ USER root
 COPY ./applications ./CFDWind/applications
 COPY ./exampleCases ./CFDWind/exampleCases
 COPY ./src ./CFDWind/src
+COPY ./test ./CFDWind/test
 COPY Allwclean Allwmake CFDWind/
 
 
