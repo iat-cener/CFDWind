@@ -53,7 +53,7 @@ def readSetFile(ofPath,setFileName,variab,outputTimeCoords=False):
 		uz=pd.DataFrame()
 
 		for ii in t:	
-			print 'Reading t = '+str(ii)+'s'		
+			print('Reading t = '+str(ii)+'s')		
 			fileName=setsPath+'/'+str(ii)+'/'+setFileName
 
 			ndata=np.genfromtxt(fileName)
@@ -64,8 +64,8 @@ def readSetFile(ofPath,setFileName,variab,outputTimeCoords=False):
 		res=dict(ux=ux, uy=uy, uz=uz)
 	else:
 		params=temp[1:-1]
-		print "Available parameters: "
-		print params
+		print("Available parameters: ")
+		print(params)
 
 		ipar = 0
 		sflag = False
@@ -78,7 +78,7 @@ def readSetFile(ofPath,setFileName,variab,outputTimeCoords=False):
 		data = pd.DataFrame()
 		
 		for ii in t:
-			print 'Reading t = '+str(ii)+'s'
+			print('Reading t = '+str(ii)+'s')
 			fileName=setsPath+'/'+str(ii)+'/'+setFileName
 			
 			ndata=np.genfromtxt(fileName)		

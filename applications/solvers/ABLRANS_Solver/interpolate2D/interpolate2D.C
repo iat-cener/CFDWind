@@ -105,6 +105,44 @@ List<Type> interpolate2D
     return fi;
 }
 
+scalar findIndex
+(
+    const scalar x,
+    const label nx,
+    const List<scalar>& xs
+)
+{
+	label iLow = 0; 
+	label iHigh = nx-1;
+
+	// to speed up convergance, assume linear distribution and try to guess the correct index
+	label i = label( (iHigh-iLow) * (x-xs[iLow]) / (xs[iHigh]-xs[iLow]) );
+	
+	// now lets check if we guessed it right
+	label gHigh = min(i + 1,nx - 1);
+	label gLow = max(i - 1, 0);
+	if((x >= xs[gLow]) && (x <= xs[gHigh])){
+		//we got the solution, now just refine it if necessarry
+		if(xs[i] <= x) return i;
+		return gLow;
+	}
+
+	while ((iHigh-iLow) > 1)
+    {     
+    	if(xs[i] < x)
+				iLow = i;
+		else if(xs[i] > x)
+				iHigh = i;
+		else 
+		{
+			iLow = i;
+			iHigh = i;
+		}
+		i = label((iHigh+iLow)/2);
+    }
+
+	return iLow;
+}
 
 template<class Type>
 Type interpolate2D
@@ -119,9 +157,11 @@ Type interpolate2D
     // Get interpolation data size.
     label nx = x.size();
     label ny = y.size();
+    
+ 	// TODO - this step should be done when initializing, not here
+/*   
     label nxf = f.size();
     label nyf = f[0].size();
-
 
     // Check to make sure data sizes all match up.  Does the size of x
     // match the x-index size of f, and same with y.  Give error message
@@ -137,45 +177,19 @@ Type interpolate2D
              "f(x,y) size: " << nxf << ", " << nyf <<
              abort(FatalError);
     }
-
+*/
 
     // Find bounding indices in x.
-    label xLow = 0;
-    while ((xLow < nx) && (x[xLow] < xi))
-    {
-        xLow++;
-    }
-    xLow--;
-    xLow = max(xLow,0);
 
-    label xHigh = nx - 1;
-    while ((xHigh >= 0) && (x[xHigh] >= xi))
-    {
-        xHigh--;
-    }
-    xHigh++;
-    xHigh = min(xHigh,nx - 1);
-
+	label xLow = findIndex(xi,nx,x);
+    label xHigh = min(xLow + 1,nx - 1);
 
     // Find bounding indices in y.
-    label yLow = 0;
-    while ((yLow < ny) && (y[yLow] < yi))
-    {
-        yLow++;
-    }
-    yLow--;
-    yLow = max(yLow,0);
+	label yLow = findIndex(yi,ny,y);
+    label yHigh = min(yLow + 1,ny - 1);
 
-    label yHigh = ny - 1;
-    while ((yHigh >= 0) && (y[yHigh] >= yi))
-    {
-        yHigh--;
-    }
-    yHigh++;
-    yHigh = min(yHigh,ny - 1);
-
-
-    // If, the data point lies outside the x or y given data ranges
+	// When out of range we dont want linear extrapolation, instead it is safer to use the nearest value
+    /*// If, the data point lies outside the x or y given data ranges
     // set up the high and low indices so that linear extrapolation
     // will be done.
     if (xHigh == xLow)
@@ -200,7 +214,7 @@ Type interpolate2D
         {
             yLow--;
         }
-    }
+    }*/
 
 
     Type m1;
