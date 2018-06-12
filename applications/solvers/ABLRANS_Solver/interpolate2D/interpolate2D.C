@@ -112,34 +112,36 @@ scalar findIndex
     const List<scalar>& xs
 )
 {
-	label iLow = 0;
+	label iLow = 0; 
 	label iHigh = nx-1;
-	label i;
+
+	// to speed up convergance, assume linear distribution and try to guess the correct index
+	label i = label( (iHigh-iLow) * (x-xs[iLow]) / (xs[iHigh]-xs[iLow]) );
 	
-	// take care of out of range cases
-	//if(xs[iLow] >= x) iHigh = iLow;
-	//if(xs[iHigh] <= x) iLow = iHigh;
-	
+	// now lets check if we guessed it right
+	label gHigh = min(i + 1,nx - 1);
+	label gLow = max(i - 1, 0);
+	if((x >= xs[gLow]) && (x <= xs[gHigh])){
+		//we got the solution, now just refine it if necessarry
+		if(xs[i] <= x) return i;
+		return gLow;
+	}
+
 	while ((iHigh-iLow) > 1)
-    {
-        i = label((iHigh+iLow)/2);
-              
-        if(xs[i] < x)
-        {
-			iLow = i;
-		}
+    {     
+    	if(xs[i] < x)
+				iLow = i;
 		else if(xs[i] > x)
-		{
-			iHigh = i;
-		}
+				iHigh = i;
 		else 
 		{
 			iLow = i;
 			iHigh = i;
 		}
-
+		i = label((iHigh+iLow)/2);
     }
-    return iLow;
+
+	return iLow;
 }
 
 template<class Type>
@@ -178,7 +180,8 @@ Type interpolate2D
 */
 
     // Find bounding indices in x.
-    label xLow = findIndex(xi,nx,x);
+
+	label xLow = findIndex(xi,nx,x);
     label xHigh = min(xLow + 1,nx - 1);
 
     // Find bounding indices in y.

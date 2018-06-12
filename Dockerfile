@@ -70,7 +70,8 @@ WORKDIR CFDWind
 RUN /bin/bash -c "source $HOME/OpenFOAM/OpenFOAM-2.4.0/etc/bashrc WM_NCOMPPROCS=4 &&\ 
     	export QT_SELECT=qt4 &&\
 		./Allwclean &&\
+	    ./Allwmake > log.make 2>&1 &&\
 		./Allwmake" &&\
-	rm -R $HOME/OpenFOAM/OpenFOAM-2.4.0/src
+		rm -R $HOME/OpenFOAM/OpenFOAM-2.4.0/src
 
 
