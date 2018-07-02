@@ -79,7 +79,7 @@ def main():
 		varName     = vars2extract[ii][1]
 		varLongName = vars2extract[ii][2]
 		varUnits    = vars2extract[ii][3]
-		print "proccesing variable: "+ varName
+		print("proccesing variable: "+ varName)
 	
 		varData = readSetFile(openFoamCasePath,scalarsFileName,varNameInSetsFile)
 		if (vars2extract[ii][4]==0):

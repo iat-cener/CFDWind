@@ -39,9 +39,9 @@ def main():
 	datefrom = datetime.datetime.strptime(datefromSys,'%Y-%m-%d %H:%M')
 	dateto   = datetime.datetime.strptime(datetoSys,'%Y-%m-%d %H:%M')	
 
-	print "Initializing "+openFoamCasePath
-	print "\nForcing File: "+tendenciesFile
-	print "\nPeriod to consider: from "+str(datefrom)+" until "+str(dateto) +"\n"
+	print(("Initializing "+openFoamCasePath))
+	print(("\nForcing File: "+tendenciesFile))
+	print(("\nPeriod to consider: from "+str(datefrom)+" until "+str(dateto) +"\n"))
 	
 	# List with: [ writeoutput data?, where (path) to write it?]
 	writeInitialValues = [True, openFoamCasePath+'/forcing/']
@@ -136,7 +136,7 @@ def main():
 		
 		
 	if (writeForcings[0]):
-		print "writing forcing"
+		print ("writing forcing")
 		
 		if plotData:
 			plt.figure(1); plot_nc_tzData('Uforcing', mesoData['hrs_since_t0'], mesoData['z'], Uf, datefrom,dateto, True)
@@ -153,7 +153,7 @@ def main():
 		fid.close()
 		
 	if (writeSurfaceValues[0]):
-		print "writing surface values"
+		print ("writing surface values")
 		# Skin real temperature   
 		with open(writeSurfaceValues[1]+'surfaceSkinTemperatureTable', 'w') as csvfile:
 			writer = csv.writer(csvfile)
@@ -173,7 +173,7 @@ def main():
 				
 	
 	if (writeInitialValues[0]):
-		print "writing initial values"
+		print ("writing initial values")
 		fid = open(writeInitialValues[1]+'initialValues','w')   
 		for j in range(nz):
 			fid.write(' (' + str(z[j]) + ' ' + str(U[0,j]) + ' ' + str(V[0,j]) + ' ' + str(Th[0,j]) + ')\n')

@@ -1,0 +1,5 @@
+# Use UNIX line ending by default
+* text eol=lf
+
+# IUse WINDOWS line ending for:
+*.bat text eol=crlf
