@@ -48,7 +48,7 @@ def main():
 	# read data for the rest of variables
 	for ii in varList:
 		if (ii is not 'U'):
-			varData = readSetFile(OFpath,scalarsFileName,ii)
+			varData = readSetFile(openFoamCasePath,scalarsFileName,ii)
 			fdataPy[ii] = varData['data']
 
 			
