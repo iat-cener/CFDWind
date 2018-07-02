@@ -2,3 +2,7 @@
 *.bak
 
 exampleCases/GABLS3/pyFiles/lib/__pycache__/
+
+docs/_build/html/
+
+docs/_build/doctrees/
