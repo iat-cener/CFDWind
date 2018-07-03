@@ -12,8 +12,8 @@ The solver is based on the Boussinesq approximation by including a buoyancy term
 
 The Boussinesq approximation for incompressible flow is approached in OpenFOAM through the *buoyantBoussinesqPimpleFoam* solver which introduces the PISO-SIMPLE algorithm to solve the pressure-velocity-temperature coupling. This algorithm does not solve the continuity equation; instead, it solves a pressure Poisson equation that enforces continuity.  Details about the solver algorithm for OpenFOAM can be found in [OpenFOAM-PISO wiki description](https://openfoamwiki.net/index.php/BuoyantBoussinesqPisoFoam).
 
-The original OpenFOAM solver is modified following the method proposed by Sanz-Rodrigo et al. 2017b. That is, Coriolis apparent force and real large scale forcing are used as model forcing. 
-Forcing comes from the terms in WRF momentum& energy budget associated to the pressure gradient and the advection of momentum and temperature. These tendencies are obtained in the standard output of WRF following the method described in Lehner (2018a,b).
+The original OpenFOAM solver is modified following the method proposed by Sanz-Rodrigo et al. 2017b. That is, Coriolis apparent force and realistic large scale (synoptic and mesoscale) fields are used as model forcing. 
+The large scale forcing comes from the terms in WRF momentum & energy budget associated to the pressure gradient and the advection of momentum and temperature. These tendencies are obtained by a previously run WRF simulation in which a small modification to WRF's source code is made in order to include these fields in the standard output of WRF solution as described in Lehner (2018a,b).
 
 So far, the tendencies are only height and time-dependent which are valid for flat-terrain sites. Prior to be introduced in the microscale model, these terms are stored and averaged horizontally in a 45km area as described in Chavez-Arroyo et al. 2018. 
 The implementations for incorporating the tendencies in OpenFOAM are built on top of the [SOWFA project](https://github.com/NREL/SOWFA) (Churchfield et al. 2014) developed at the U.S. National Renewable Energy Laboratory (NREL).
