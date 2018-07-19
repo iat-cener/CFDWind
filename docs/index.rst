@@ -81,7 +81,9 @@ following MOST and Etling (1996) stability functions.
    code_structure
    instalation
    tutorials
+   get_involved
    license
    references
    acnowladgements
+
 

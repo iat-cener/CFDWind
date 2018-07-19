@@ -22,7 +22,7 @@ You can test it (takes 1 minute) by running::
     $ ./test/pre-run-quickTest.sh
 
 
-
+.. todo:: To share input/output with the OS, and avoid storing everything in the virtual drive, we should mount workdir to the host. 
 
 
 Development workflow
@@ -47,6 +47,8 @@ At this point all is ready for development
 5. Rebuild the image (it should take only few minutes)::
 
     $ docker build -t cfdwind ./
+
+.. todo:: The build step rebuilds the whole model. Better if recompiled inside the image.
 
 6. Run a quick model test (takes around 1 minute)::
 
