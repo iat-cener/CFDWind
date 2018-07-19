@@ -3,42 +3,60 @@
 Installation/Compiling
 ----------------------
 
-Once OpenFOAM is installed and CFDWind3 downloaded, you should follow
-these steps: 
+The suggested way for using CFDWind is by using Docker https://www.docker.com/
+Docker works under most of the operating systems and allows deplying CFDWind from a single packadge.
 
-1. Make sure you have loaded the OpenFOAM v2.4.1 environment. 
-2. Change directory to the CFDWind3 local directory
-3. Run ``./Allwclean`` 
-4. Run ``./Allwmake`` 
-5. Make sure that no error messages appeared and that all libraries and applications are listed as "up to date."
 
-Even though the example case is preconfigured with the forcing files
-required to run the tutorial, external libraries of netCFD and Python
-programming language are needed if the user wants to modify the
-pre-processing and, in particular for post-processing the OpenFOAM
-outputs to replicate/analyze/share the results in the format required in
-the `GABLS3 benchmarking exercise <http://windbench.net/gabls-3>`__.
-netCFD4 system libraries, as well as its Python bindings are available
-in most Linux-based OS repositories. In the specific case of Debian-type
-systems you can install them as follows:
+Quick start using Docker Hub
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-1. Install netCDF system libs: >
-   ``sudo apt install ibnetcdf-dev netcdf-bin``
-2. Install (or make sure you have) systems libs: >
-   ``sudo apt install build-essential``
-3. Install (or make sure you have) pip library management system: >
-   ``sudo apt install python-pip``
-4. Make sure pip is updated > ``pip install --upgrade pip``
-5. Install netCDF4 python bindings > ``pip install netCDF4``
+A pre-build image of CFDWind is available from the Docker Hub. Once you have the Docker installed ( https://store.docker.com/search?type=edition&offering=community ) you can run the CFDWind environment with a single command::
 
-The scripts are known to work with Python v2.7 which in addition
-requires the following specific Python libraries (and version): 
+    $ docker run -it windbench/cfdwind /bin/bash
 
-- matplotlib (1.5.1) 
-- netCDF4 (1.2.9) 
-- numexpr (2.6.3) 
-- numpy (1.14.0)
-- pandas (0.22.0) 
-- pip (9.0.1) 
-- scipy (1.0.0)
+The first time the command might take some time downloading the image.
+
+The above command will open a terminal that is ready to use.
+You can test it (takes 1 minute) by running::
+
+    $ ./test/pre-run-quickTest.sh
+
+
+
+
+
+Development workflow
+^^^^^^^^^^^^^^^^^^^^
+
+1. You will need:
+	- Docker - https://store.docker.com/search?type=edition&offering=community
+	- and git - https://gist.github.com/derhuerst/1b15ff4652a867391f03
+
+2. Clone the CFDWind repository::
+
+    $ git clone https://github.com/iat-cener/CFDWind.git cfdwind
+
+3. Build your local CFDWind Docker image (for the first time it will take around 2 hours)::
+
+    $ cd cfdwind
+    $ docker build -t cfdwind ./
+
+At this point all is ready for development
+
+4. Make some changes in the code
+5. Rebuild the image (it should take only few minutes)::
+
+    $ docker build -t cfdwind ./
+
+6. Run a quick model test (takes around 1 minute)::
+
+    $ docker run -it cfdwind /bin/bash -c "source ~/OpenFOAM/OpenFOAM-2.4.0/etc/bashrc && ./test/pre-run-quickTest.sh"
+
+7. Get involved, improove the code and repeat steps 4-6.
+
+
+Without Docker
+^^^^^^^^^^^^^^
+
+For a custom instalation, it is easiest to follow the build script for the Docker image https://github.com/iat-cener/CFDWind/blob/master/Dockerfile which lists all the dependencies.
 
