@@ -37,4 +37,5 @@ blockMesh > log.blockMesh
 echo "set the initial fields"
 setRANSfieldsABL > log.setRANSfieldsABL
 
-
+echo "compute zAGL field"
+calcZaboveGround > log.calcZagl

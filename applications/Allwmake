@@ -4,4 +4,4 @@ cd ${0%/*} || exit 1    # run from this directory
 wmake ./solvers/ABLRANS_Solver
 wmake ./utilities/setRANSfieldsABL
 wmake ./utilities/writeMeshCoordinates
-
+wmake ./utilities/calcZaboveGround

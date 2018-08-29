@@ -127,3 +127,55 @@
 
         sourceTHistoryFile() << "Time (s)" << " " << "dt (s)" << " " << "source term (K/s)" << endl;
     }
+
+
+
+
+	//create z above groung level field
+
+	volScalarField zAGL
+    (
+        IOobject
+        (
+            "zAGL",
+            runTime.timeName(),
+            mesh,
+            //IOobject::NO_READ,
+            IOobject::MUST_READ,
+            IOobject::AUTO_WRITE
+        ),
+        mesh
+	//dimensionedScalar("Z", dimensionSet(0,1,0,0,0,0,0), 0.0)  // by default we assing 0 as ground level at faces
+    );
+	
+    // Precompute height based indexes for interpolation
+    List<label> momentumIndexes(zAGL.size());
+	List<label> tempIndexes(zAGL.size());
+    forAll(zAGL, celli)
+    {
+        momentumIndexes[celli] = findIndex(zAGL[celli], sourceHeightsMomentumSpecified);
+		tempIndexes[celli]     = findIndex(zAGL[celli], sourceHeightsTemperatureSpecified);
+    }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

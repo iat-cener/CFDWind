@@ -3,121 +3,46 @@
    scalar t = runTime.value();
    scalar dt = runTime.deltaT().value();
 
+	//precompute time based indexes for interpolation
+	label XTimeIndex = findIndex(t,sourceMomentumXTimesSpecified);
+	label YTimeIndex = findIndex(t,sourceMomentumYTimesSpecified);
+	label ZTimeIndex = findIndex(t,sourceMomentumZTimesSpecified);
+	label tempTimeIndex = findIndex(t,sourceTemperatureTimesSpecified);
 
    // This part is if the momentum source terms are applied directly as given
    if (momentumSourceType == "given")
    {
-       // This is if the source is only given at one height.  In that case,
-       // assume the source is set uniformly throughout the domain to the
-       // given value as a function of time only.
-       if (nSourceMomentumHeights == 1)
-       {
-           scalar sourceUX = interpolate2D(t,
-                                           sourceHeightsMomentumSpecified[0],
-                                           sourceMomentumXTimesSpecified,
-                                           sourceHeightsMomentumSpecified,
-                                           sourceMomentumXSpecified);
-
-           scalar sourceUY = interpolate2D(t,
-                                           sourceHeightsMomentumSpecified[0],
-                                           sourceMomentumYTimesSpecified,
-                                           sourceHeightsMomentumSpecified,
-                                           sourceMomentumYSpecified);
-
-           scalar sourceUZ = interpolate2D(t,
-                                           sourceHeightsMomentumSpecified[0],
-                                           sourceMomentumZTimesSpecified,
-                                           sourceHeightsMomentumSpecified,
-                                           sourceMomentumZSpecified);
-
-           vector s(vector::zero);
-           s.x() = sourceUX;
-           s.y() = sourceUY;
-           s.z() = sourceUZ;
-
-           forAll(SourceU,i)
-           {
-               SourceU[i] = s;
-           }
-
-
-           // Write the source information.
-           if (Pstream::master())
-           {
-               if (statisticsOn)
-               {
-                   if (runTime.timeIndex() % statisticsFreq == 0)
-                   {
-                       sourceUXHistoryFile() << runTime.timeName() << " " << runTime.deltaT().value() << " " << sourceUX << endl;
-                       sourceUYHistoryFile() << runTime.timeName() << " " << runTime.deltaT().value() << " " << sourceUY << endl;
-                       sourceUZHistoryFile() << runTime.timeName() << " " << runTime.deltaT().value() << " " << sourceUZ << endl;
-                   }
-               }
-           }
-       }
-       //  Otherwise, set the source as a function of height and time.
-       else
-       {
-          // Interpolate the source values in time and height.
-           sourceUXColumn = interpolate2D(t,
-                                          hLevelsValues,
-                                          sourceMomentumXTimesSpecified,
-                                          sourceHeightsMomentumSpecified,
-                                          sourceMomentumXSpecified);
-
-           sourceUYColumn = interpolate2D(t,
-                                          hLevelsValues,
-                                          sourceMomentumYTimesSpecified,
-                                          sourceHeightsMomentumSpecified,
-                                          sourceMomentumYSpecified);
-
-           sourceUZColumn = interpolate2D(t,
-                                          hLevelsValues,
-                                          sourceMomentumZTimesSpecified,
-                                          sourceHeightsMomentumSpecified,
-                                          sourceMomentumZSpecified);
-
-           // Now go by cell levels and apply the source term.
-           forAll(hLevelsCellList,level)
-           {
-               for (label i = 0; i < numCellPerLevel[level]; i++)
-               {
-                   vector s(vector::zero);
-                   s.x() = sourceUXColumn[level];
-                   s.y() = sourceUYColumn[level];
-                   s.z() = sourceUZColumn[level];
-
-                   SourceU[hLevelsCellList[level][i]] = s;
-               }
-           }
-
-
-           // Write the column of source information.
-           if (Pstream::master())
-           {
-               if (statisticsOn)
-               {
-                   if (runTime.timeIndex() % statisticsFreq == 0)
-                   {
-                       sourceUXHistoryFile() << runTime.timeName() << " " << runTime.deltaT().value();
-                       sourceUYHistoryFile() << runTime.timeName() << " " << runTime.deltaT().value();
-                       sourceUZHistoryFile() << runTime.timeName() << " " << runTime.deltaT().value();
-
-                       forAll(hLevelsCellList,level)
-                       {
-                          sourceUXHistoryFile() << " " << sourceUXColumn[level];
-                          sourceUYHistoryFile() << " " << sourceUYColumn[level];
-                          sourceUZHistoryFile() << " " << sourceUZColumn[level];
-                       }
-
-                       sourceUXHistoryFile() << endl;
-                       sourceUYHistoryFile() << endl;
-                       sourceUZHistoryFile() << endl;
-                   }
-               }
-           }
-       }
-   }
+		//  Set the source as a function of height and time.
+		forAll(zAGL, celli)
+		{
+        	vector s(vector::zero);
+			s.x() = interpolate2D(t,
+									//mesh.C()[celli][2],
+									zAGL[celli],
+									XTimeIndex,
+									momentumIndexes[celli],
+									sourceMomentumXTimesSpecified,
+									sourceHeightsMomentumSpecified,
+									sourceMomentumXSpecified);
+			s.y() = interpolate2D(t,
+									//mesh.C()[celli][2],
+									zAGL[celli],
+									YTimeIndex,
+									momentumIndexes[celli],
+									sourceMomentumYTimesSpecified,
+									sourceHeightsMomentumSpecified,
+									sourceMomentumYSpecified);
+			s.z() = interpolate2D(t,
+									//mesh.C()[celli][2],
+									zAGL[celli],
+									ZTimeIndex,
+									momentumIndexes[celli],
+									sourceMomentumZTimesSpecified,
+									sourceHeightsMomentumSpecified,
+									sourceMomentumZSpecified);
+			SourceU[celli] = s;
+		}   
+	}
 
    // This part is if the momentum source terms have to be computed.
    else if (momentumSourceType == "computed")
@@ -368,72 +293,21 @@
    // This part is if the temperature source terms are applied directly as given
    if (temperatureSourceType == "given")
    {
+		//  Set the source as a function of height and time.
+		forAll(zAGL, celli)
+		{
+        	vector s(vector::zero);
+			SourceT[celli] = interpolate2D(t,
+									//mesh.C()[celli][2],
+									zAGL[celli],
+									tempTimeIndex,
+									tempIndexes[celli],
+									sourceTemperatureTimesSpecified,
+									sourceHeightsTemperatureSpecified,
+									sourceTemperatureSpecified
+			);
+		}   
 
-       // This is if the source is only given at one height.  In that case,
-       // assume the source is set uniformly throughout the domain to the
-       // given value as a function of time only.
-       if (nSourceTemperatureHeights == 1)
-       {
-           scalar sourceT = interpolate2D(t,
-                                          sourceHeightsTemperatureSpecified[0],
-                                          sourceTemperatureTimesSpecified,
-                                          sourceHeightsTemperatureSpecified,
-                                          sourceTemperatureSpecified);
-
-           forAll(SourceT,i)
-           {
-               SourceT[i] = sourceT;
-           }
-
-           // Write the source information.
-           if (Pstream::master())
-           {
-               if (statisticsOn)
-               {
-                   if (runTime.timeIndex() % statisticsFreq == 0)
-                   {
-                       sourceTHistoryFile() << runTime.timeName() << " " << runTime.deltaT().value() << " " << sourceT << endl;
-                   }
-               }
-           }
-       }
-       // Otherwise, set the source as a function of height and time.
-       else
-       {
-           // Interpolate the source values in time and height.
-           sourceTColumn = interpolate2D(t,
-                                         hLevelsValues,
-                                         sourceTemperatureTimesSpecified,
-                                         sourceHeightsTemperatureSpecified,
-                                         sourceTemperatureSpecified);
-
-           // Now go by cell levels and apply the source term.
-           forAll(hLevelsCellList,level)
-           {
-               for (label i = 0; i < numCellPerLevel[level]; i++)
-               {
-                   SourceT[hLevelsCellList[level][i]] = sourceTColumn[level];
-               }
-           }
-
-           if (Pstream::master())
-           {
-               if (statisticsOn)
-               {
-                   if (runTime.timeIndex() % statisticsFreq == 0)
-                   {
-                       sourceTHistoryFile() << runTime.timeName() << " " << runTime.deltaT().value();
-
-                       forAll(hLevelsCellList,level)
-                       {
-                          sourceTHistoryFile() << " " << sourceTColumn[level];
-                       }
-
-                       sourceTHistoryFile() << endl;
-                   }
-               }
-           }
-       }
    }
 
    // This part is if the temperature source terms have to be computed.

@@ -11,29 +11,29 @@
     label hLevelsTotal = 0;
     forAll(mesh.cells(),cellI)
     {
-	const vector& cellCenter = mesh.C()[cellI];
-	int hLevelsFlag = 0;
-        if(cellI == 0)
-	{
-	    hLevelsValuesP.insert(cellCenter[upIndex]);
-	    hLevelsTotal++;
-	}
-	else
-	{
-	    forAll(hLevelsValuesP,hLevelsI)
-	    {
-	        const scalar h = hLevelsValuesP.toc()[hLevelsI];;
-		if(mag(cellCenter[upIndex] - h) < hLevelsTol)
+		const vector& cellCenter = mesh.C()[cellI];
+		int hLevelsFlag = 0;
+		if(cellI == 0)
 		{
-                    hLevelsFlag = 1;
+			hLevelsValuesP.insert(cellCenter[upIndex]);
+			hLevelsTotal++;
 		}
-	    }
-	    if(hLevelsFlag == 0)
-	    {
-	        hLevelsValuesP.insert(cellCenter[upIndex]);
-		hLevelsTotal++;
-	    }
-	}
+		else
+		{
+			forAll(hLevelsValuesP,hLevelsI)
+			{
+			    const scalar h = hLevelsValuesP.toc()[hLevelsI];
+				if(mag(cellCenter[upIndex] - h) < hLevelsTol)
+				{
+				            hLevelsFlag = 1;
+				}
+			}
+			if(hLevelsFlag == 0)
+			{
+				hLevelsValuesP.insert(cellCenter[upIndex]);
+				hLevelsTotal++;
+			}
+		}
     }
     reduce(hLevelsTotal,sumOp<label>());
 
@@ -79,7 +79,7 @@
 	                }
 	           }
                    I++;
-	      }
+	     	}
          }
     }
     List<scalar> hLevelsValues = hLevelsValuesHash.toc();
@@ -89,20 +89,20 @@
     // Sort the height list to be in ascending order
     forAll(hLevelsValues,hLevelsI)
     {
-	scalar hLevelsValuesMin = 1.0E20;
-	scalar hValue = 0.0;
-	label hLabelJ = 0;
-	for(int hLevelsJ = hLevelsI; hLevelsJ < hLevelsTotal; hLevelsJ++)
-	{
-            if(hLevelsValues[hLevelsJ] < hLevelsValuesMin)
-	    {
-	        hValue = hLevelsValues[hLevelsJ];
-		hLabelJ = hLevelsJ;
-		hLevelsValuesMin = hValue;
-	    }
-	}
-	hLevelsValues[hLabelJ] = hLevelsValues[hLevelsI];
-	hLevelsValues[hLevelsI] = hValue;
+		scalar hLevelsValuesMin = 1.0E20;
+		scalar hValue = 0.0;
+		label hLabelJ = 0;
+		for(int hLevelsJ = hLevelsI; hLevelsJ < hLevelsTotal; hLevelsJ++)
+		{
+		    if(hLevelsValues[hLevelsJ] < hLevelsValuesMin)
+			{
+			    hValue = hLevelsValues[hLevelsJ];
+			hLabelJ = hLevelsJ;
+			hLevelsValuesMin = hValue;
+			}
+		}
+		hLevelsValues[hLabelJ] = hLevelsValues[hLevelsI];
+		hLevelsValues[hLevelsI] = hValue;
     }
 
 
@@ -115,31 +115,31 @@
 
     forAll(hLevelsValues,hLevelsI)
     {
-	numCellPerLevel[hLevelsI] = 0;
-	totVolPerLevelP[hLevelsI] = 0.0;
-        forAll(mesh.cells(),cellI)
-        {
-            const vector& cellCenter = mesh.C()[cellI];
-	    if(mag(cellCenter[upIndex] - hLevelsValues[hLevelsI]) < hLevelsTol)
-	    {
-	        numCellPerLevel[hLevelsI]++;
-		totVolPerLevelP[hLevelsI] += mesh.V()[cellI];
-	    }
-	}
+		numCellPerLevel[hLevelsI] = 0;
+		totVolPerLevelP[hLevelsI] = 0.0;
+		forAll(mesh.cells(),cellI)
+		{
+		    const vector& cellCenter = mesh.C()[cellI];
+			if(mag(cellCenter[upIndex] - hLevelsValues[hLevelsI]) < hLevelsTol)
+			{
+			    numCellPerLevel[hLevelsI]++;
+				totVolPerLevelP[hLevelsI] += mesh.V()[cellI];
+			}
+		}
     }
     List<List<label> > hLevelsCellList(hLevelsTotal,List<label>(max(numCellPerLevel)));
     forAll(hLevelsValues,hLevelsI)
     {
-	int i = 0;
-	forAll(mesh.cells(),cellI)
-	{
-	    const vector& cellCenter = mesh.C()[cellI];
-	    if(mag(cellCenter[upIndex] - hLevelsValues[hLevelsI]) < hLevelsTol)
-	    {
-		hLevelsCellList[hLevelsI][i] = cellI;
-		i++;
-	    }
-	}
+		int i = 0;
+		forAll(mesh.cells(),cellI)
+		{
+			const vector& cellCenter = mesh.C()[cellI];
+			if(mag(cellCenter[upIndex] - hLevelsValues[hLevelsI]) < hLevelsTol)
+			{
+			hLevelsCellList[hLevelsI][i] = cellI;
+			i++;
+			}
+		}
     }
 
     // Gather the volumes per level to get a global value

@@ -92,11 +92,11 @@ functions
 //        setFormat foamFile;
 //        outputControl   outputTime;
         outputControl   timeStep;
-//        outputInterval  1;
+        outputInterval  1;
 
 //        interpolationScheme        cellPoint;
         interpolationScheme        cell;
-        fields          (U T k epsilon nut p);
+        fields          (U T k epsilon nut p SourceU SourceT);
 
         probeLocations
         (

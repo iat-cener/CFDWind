@@ -49,43 +49,79 @@ namespace Foam
 template<class Type>
 List<List<Type> > interpolate2D
 (
-    const List<scalar>& xi,
-    const List<scalar>& yi,
     const List<scalar>& x,
     const List<scalar>& y,
+    const List<scalar>& xs,
+    const List<scalar>& ys,
     const List<List<Type> >& f
 );
 
 template<class Type>
 List<Type> interpolate2D
 (
-    const scalar& xi,
-    const List<scalar>& yi,
-    const List<scalar>& x,
+    const scalar& x,
     const List<scalar>& y,
+    const List<scalar>& xs,
+    const List<scalar>& ys,
     const List<List<Type> >& f
 );
 
 template<class Type>
 List<Type> interpolate2D
 (
-    const List<scalar>& xi,
-    const scalar& yi,
-    const List<scalar>& x,
+    const scalar& x,
     const List<scalar>& y,
+    const label& xLow,
+    const List<label>& yLow,
+    const List<scalar>& xs,
+    const List<scalar>& ys,
+    const List<List<Type> >& f
+);
+
+template<class Type>
+List<Type> interpolate2D
+(
+    const List<scalar>& x,
+    const scalar& y,
+    const List<scalar>& xs,
+    const List<scalar>& ys,
     const List<List<Type> >& f
 );
 
 template<class Type>
 Type interpolate2D
 (
-    const scalar xi,
-    const scalar yi,
-    const List<scalar>& x,
-    const List<scalar>& y,
+    const scalar x,
+    const scalar y,
+    const List<scalar>& xs,
+    const List<scalar>& ys,
     const List<List<Type> >& f
 );
 
+
+// interpolation with precomuted indexes for xs and ys lists
+template<class Type>
+Type interpolate2D
+(
+    const scalar x,
+    const scalar y,
+    const label xLow,
+    const label yLow,
+    const List<scalar>& xs,
+    const List<scalar>& ys,
+    const List<List<Type> >& f
+);
+
+
+
+
+// helper function O(log n)
+scalar findIndex
+(
+    const scalar x,
+    const label nx,
+    const List<scalar>& xs
+);
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 

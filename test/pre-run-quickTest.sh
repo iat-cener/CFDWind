@@ -13,6 +13,12 @@
 
 cd exampleCases/GABLS3/
 
+## If exist, remove the previous results
+rm processor0 -R
+rm processor1 -R
+rm processor2 -R
+rm processor3 -R
+
 # we only want to run few iterations, so we change the "theEnd" number of iterations to 600
 sed -i "s 100770 600 g"  inputParameters
 
@@ -31,16 +37,45 @@ time ./runCase.sh
 
 # check some prelimenary results
 
-echo "SourceTHistory, expected: -1.13099866569e-05"
-tail -c 20 ./postProcessing/SourceHistory/0/SourceTHistory
+echo "epsilon" 
+echo "   0.00190490069538"
+tail -c 20 ./postProcessing/probes/0/epsilon
+echo ""
 
-echo "SourceUXHistory, expected: -0.000138757210702"
-tail -c 20 ./postProcessing/SourceHistory/0/SourceUXHistory
+echo "k" 
+echo " 0.724389754221"
+tail -c 16 ./postProcessing/probes/0/k
+echo ""
 
-echo "SourceUYHistory, expected: -0.000186824395247"
-tail -c 20 ./postProcessing/SourceHistory/0/SourceUYHistory
+echo "nut" 
+echo "  8.2640609659"
+tail -c 15 ./postProcessing/probes/0/nut
+echo ""
 
-echo "SourceUZHistory, expected: 0 0 0 0 0 0 0 0 0 0"
-tail -c 20 ./postProcessing/SourceHistory/0/SourceUZHistory 
+echo "p" 
+echo "  -1501.17742639"
+tail -c 17 ./postProcessing/probes/0/p
+echo ""
+
+echo "U" 
+echo "   (-5.96517598304 -0.303756960366 -1.59169069063e-07)"
+tail -c 55 ./postProcessing/probes/0/U
+echo ""
+
+echo "T " 
+echo " 294.353402946"
+tail -c 15 ./postProcessing/probes/0/T
+echo ""
+
+echo "SourceU" 
+echo "   (-0.00036463370292 -0.000882508253524 0)"
+tail -c 44 ./postProcessing/probes/0/SourceU
+echo ""
+
+echo "SourceT"
+echo "   -7.8929842225e-05"
+tail -c 21 ./postProcessing/probes/0/SourceT
+
+
 
 
