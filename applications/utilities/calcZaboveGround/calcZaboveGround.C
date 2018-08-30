@@ -127,7 +127,7 @@ int main(int argc, char *argv[])
 		// Find patch face with closest centre to current point in x-y plane
 		// (This is a very slow but sure method...)
 		
-		scalar currentMin = 1e100;
+		/*scalar currentMin = 1e100;
 		forAll(faces, facei)
 		{
 			// Patch face position vector (in x-y plane)
@@ -138,58 +138,70 @@ int main(int argc, char *argv[])
 				zGround = faces[facei].z();
 				currentMin = Foam::mag(r-p);
 			}
-		}
-		
-		
-		// Find patch face whose x and y extents contain r.x() and r.y()
-		// (This is less accurate but should be faster...)
-/*
-		bool found = false;
-		while (!found)
-		{
-			// Get vertices that define current patch face
-			labelList vertices = patchFaces[face];
-
-			scalar minX = 1e100;
-			scalar maxX = -1e100;
-			scalar minY = minX;
-			scalar maxY = maxX;
-			
-			forAll (vertices, vertexI)
-			{
-				point vertex = mesh.points()[vertices[vertexI]];
-		
-				if (vertex.x() >= maxX)
-					maxX = vertex.x();
-				if (vertex.x() <= minX)
-					minX = vertex.x();
-				if (vertex.y() >= maxY)
-					maxY = vertex.y();
-				if (vertex.y() <= minY)
-					minY = vertex.y();
-			}
-
-//			Info << minX << endl;
-//			Info << maxX << endl;
-//			Info << minY << endl;
-//			Info << maxY << endl;
-
-			// Check if r.x() and r.y() are contained by x and y extents of face
-			if (r.x() >= minX && r.x() <= maxX && r.y() >= minY && r.y() <= maxY)
-			{
-				zGround = faces[face].z();
-				found = true;
-//				Info << "r = " << r << endl;
-//				Info << "patch face centre = " << faces[face] << endl;
-//				Info << "zGround = " << zGround << endl;
-			}
-			else
-				face++;
-
-			if (face >= patchFaces.size())
-				face = 0;
-//			Info << "face = " << face << endl;
 		}*/
+		
+		//Search for 4 nearest solutions and use linear interpolation for the z value 
+
+		scalar dist0 = 1e100;
+		scalar dist1 = 1e100;		
+		scalar dist2 = 1e100;
+		scalar dist3 = 1e100;
+		scalar zGround0 = -999;
+		scalar zGround1 = -999;		
+		scalar zGround2 = -999;
+		scalar zGround3 = -999;				
+		scalar temp;
+		
+		forAll(faces, facei)
+		{
+			// Patch face position vector (in x-y plane)
+			Vector<double> p(faces[facei].x(),faces[facei].y(),0);
+
+			//if p is close enough, then add it to the sorted list
+			if(Foam::mag(r-p) < dist0)
+			{
+				zGround0 = faces[facei].z();
+				dist0 = Foam::mag(r-p);
+				if(dist0 < dist1)	
+				{
+					temp = dist1;
+					dist1 = dist0;
+					dist0 = temp;
+					temp = zGround0;
+					zGround0 = zGround1;
+					zGround1 = temp;
+					if(dist1 < dist2)
+					{
+						temp = dist1;
+						dist1 = dist2;
+						dist2 = temp;
+						temp = zGround2;
+						zGround2 = zGround1;
+						zGround1 = temp;
+						if(dist2 < dist3)
+						{
+							temp = dist3;
+							dist3 = dist2;
+							dist2 = temp;
+							temp = zGround2;
+							zGround2 = zGround3;
+							zGround3 = temp;
+						}
+					}
+				}
+			}
+		}
+		//inverse distance weighted, linear interpolation (Shepard interpolation for p=1)
+		if(dist3 == 0)
+		{
+			zGround = zGround3;
+		}
+		else
+		{
+			scalar sum1 = zGround0/dist0 + zGround1/dist1 + zGround2/dist2 + zGround3/dist3;
+			scalar sum2 = 1/dist0 + 1/dist1 + 1/dist2 + 1/dist3;
+			zGround = sum1/sum2;
+		}
 
 		scalar deltaZ = cellCentres[celli].z() - zGround;
 		if (deltaZ < 0)
